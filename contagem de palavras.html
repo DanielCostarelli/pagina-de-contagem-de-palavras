@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contador de Palavras e Caracteres</title>
     <style>
+
+        :root { 
+            --textarea_focus_border_color: #00000016;   
+            --textarea_scroolbar_color: #4f4f4f57 #00000016;   
+        }
+
+
+
+
+
         #cover {
             position: fixed;
             top: 0;
@@ -50,7 +60,7 @@
             width: 100%;
             height: calc(100% - 60px);
             resize: none;
-            border: 2px solid #0000000e;
+            border: 2px solid #75757518;
             padding: 10px;
             font-size: 1.1em;
             border-radius: 8px;
@@ -58,13 +68,13 @@
             color: #222222;
             background: #38383800;
             font-family: "Varela Round", sans-serif;
-            scrollbar-color: #4f4f4f57 #00000016;
+            scrollbar-color: var(--textarea_scroolbar_color);
             word-spacing: 1px;
             line-height: 1.4;
         }
 
         textarea:focus {
-            border-color: #00000016;
+            border-color: var(--textarea_focus_border_color);
             outline: none;
         }
 
@@ -76,15 +86,81 @@
             font-size: 1em;
             line-height: 1.6;
         }
+
+        .interruptor_dark_mode {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            border: 1px solid #222222;
+            border-radius: 999px;
+            width: 36px;
+            height: 18px;
+            cursor: pointer;
+            background-color: #241b148a;
+
+            
+        }
+        .interruptor_2_dark_mode {
+            border: 1px solid #222222;
+            border-radius: 999px;
+            width: 14px;
+            height: 14px;
+            background-color: #29395786;
+            position: absolute;
+            transition: right 0.2s cubic-bezier(0.19, 0.91, 0.91, 0.95);
+            right: 18px;
+        }
+
+        .interruptor_dark_mode::after {
+            content: attr(data-message); /* Conteúdo dinâmico com o atributo data-message */
+            display: none; /* Inicialmente oculto */
+            justify-content: center;
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.609);
+            color: white;
+            padding: 10px;
+            font-size: 13px;
+            width: 100px;
+            border-radius: 9px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            white-space: pre-wrap; /* Permite quebras de linha */
+            z-index: 1; /* Z-index maior para aparecer acima do elemento */
+        }
+
+        .interruptor_dark_mode:hover::after {
+            display: flex; /* Exibe ao passar o mouse */
+            position: absolute;
+            right: 40px;
+        }
     </style>
 </head>
 <body>
+
+
+
+
+
     <div id="cover"></div>
 
     <div id="content">
         <textarea id="textArea" oninput="countWordsAndChars()" onmouseup="updateSelectedChars()" onkeyup="updateSelectedChars()" placeholder="Digite seu texto aqui..."></textarea>
         <div id="counter">Palavras: <strong>0</strong><br>Caracteres: <strong>0</strong><br>Linhas: <strong>1</strong></div>
     </div>
+
+    <div class="interruptor_dark_mode" id="interruptor_dark_mode" onclick="darkmode()" data-message="Dark/Light Mode">
+        <div class="interruptor_2_dark_mode" id="interruptor_2_dark_mode">
+
+        </div>
+    </div>
+
+
+
+
+
 
     <script>
         let totalWords = 0;
@@ -121,6 +197,39 @@
             }
 
             document.getElementById('counter').innerHTML = counterText;
+        }
+
+    let contagem = 0;
+        function darkmode() {
+            contagem += 1;
+
+            if (contagem % 2 == 1) {
+                document.getElementById('interruptor_2_dark_mode').style.right = '0px';    // dark
+                document.getElementById('cover').style.background = 'linear-gradient(to right bottom, rgb(25 1 6 / 86%), rgb(0 0 0 / 93%))';
+                document.getElementById('content').style.background = 'linear-gradient(to bottom right, #ffffff0d, #ffffff0d)';
+                document.getElementById('counter').style.color = '#dcdcdc';
+                document.getElementById('textArea').style.color = '#dcdcdc';
+                document.documentElement.style.setProperty('--textarea_scroolbar_color', '#dcdcdc #ffffff16');
+                document.documentElement.style.setProperty('--textarea_focus_border_color', '#ffffff16');
+                document.getElementById('interruptor_dark_mode').style.backgroundColor = '#ffffff2b';
+                document.getElementById('interruptor_dark_mode').style.border = '1px solid #bcbcbc';
+                document.getElementById('interruptor_2_dark_mode').style.backgroundColor = '#ff688630';
+                document.getElementById('interruptor_2_dark_mode').style.border = '1px solid #bcbcbc';
+
+            } else {
+                document.getElementById('interruptor_2_dark_mode').style.right = '18px';   // light
+                document.getElementById('cover').style.background = 'linear-gradient(to bottom right, #d3f2ffdb, #ffefe6e3)';
+                document.getElementById('content').style.background = 'linear-gradient(to bottom right, #00000003, #0000000a)';
+                document.getElementById('counter').style.color = '#333333';
+                document.getElementById('textArea').style.color = '#222222';
+                document.documentElement.style.setProperty('--textarea_scroolbar_color', '#4f4f4f57 #00000016');
+                document.documentElement.style.setProperty('--textarea_focus_border_color', '#00000016');
+                document.getElementById('interruptor_dark_mode').style.backgroundColor = '#241b148a';
+                document.getElementById('interruptor_dark_mode').style.border = '1px solid #222222';
+                document.getElementById('interruptor_2_dark_mode').style.backgroundColor = '#29395786';
+                document.getElementById('interruptor_2_dark_mode').style.border = '1px solid #222222';
+            }
+
         }
 
 
